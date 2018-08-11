@@ -46,7 +46,7 @@ class mediaPlayer:
         # videoCanvas = Canvas(self.window, width = width, height = height)
         # videoCanvas.pack()
 
-        pauseBtn = Button(self.window, text="Pause", command=lambda:self.nextFrame())
+        pauseBtn = Button(self.window, text="Pause", command=self.nextFrame)
         pauseBtn.pack(side="bottom")
 
         quitBtn = Button(self.window, text="Quit", command=self.window.destroy)
