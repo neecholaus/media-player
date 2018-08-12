@@ -10,6 +10,10 @@ import time
 
 
 class mediaPlayer:
+    currFrame = 0
+    frames = None
+    selfPhoto = None
+
     def createImages(self, filename):
         capture = cv2.VideoCapture(filename)
 
@@ -29,31 +33,37 @@ class mediaPlayer:
         return frames
 
     def nextFrame(self):
-        print('next')
+        self.currFrame += 1
+
+        self.photo = PIL.ImageTk.PhotoImage(image=self.frames[self.currFrame])
+
+        self.videoCanvas.itemconfig(self.canvas_id, image=self.photo, anchor=NW)
+        print(self.videoCanvas.itemcget(self.canvas_id, 'image'))
 
     def __init__(self):
         args = sys.argv
 
         videoPath = args[1]
 
-        # frames = self.createImages(videoPath)
+        self.frames = self.createImages(videoPath)
 
         self.window = Tk()
         self.window.title('Media Player')
 
-        # width, height = frames[0].size
+        width, height = self.frames[self.currFrame].size
 
-        # videoCanvas = Canvas(self.window, width = width, height = height)
-        # videoCanvas.pack()
+        self.videoCanvas = Canvas(self.window, width=width, height=height)
+        self.videoCanvas.pack()
 
-        pauseBtn = Button(self.window, text="Pause", command=self.nextFrame)
-        pauseBtn.pack(side="bottom")
+        nextBtn = Button(self.window, text="Next Frame", command=self.nextFrame)
+        nextBtn.pack(side="bottom")
 
         quitBtn = Button(self.window, text="Quit", command=self.window.destroy)
         quitBtn.pack(side="bottom")
 
-        # photo = PIL.ImageTk.PhotoImage(image = frames[0])
-        # item = videoCanvas.create_image(0, 0, image=photo, anchor=NW)
+        self.photo = PIL.ImageTk.PhotoImage(image=self.frames[self.currFrame])
+
+        self.canvas_id = self.videoCanvas.create_image(0, 0, image=self.photo, state='normal', anchor=NW)
 
         self.window.mainloop()
 
